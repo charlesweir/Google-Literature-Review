@@ -15,7 +15,7 @@ The service requires an API key in the file APIKey.yaml in the same directory as
     # Comments with the hash character
     SERP_API_KEY: 92340184908390218409819aslkjfk13948
 
-The notebooks are tested and working at the time of upload. They are suitable for modification for any similar literature review based on Google Scholar. FirstStep.ipynb and Snowballing.ipynb will require obvious and minor changes; Analysis has more tailoring to the specific needs of the survey, but is offered for whatever value it may offer.
+The notebooks are tested and working at the time of upload. They are suitable for modification for any similar literature review based on Google Scholar. FirstStep.ipynb and Snowballing.ipynb will require obvious and minor changes; Analysis.ipynb has more tailoring to the specific needs of the survey, but is usable for whatever value it may offer.
 
 Charles Weir
 
