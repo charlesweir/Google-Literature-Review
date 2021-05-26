@@ -11,6 +11,7 @@ We used an iterative process, and this is reflected in the notebooks:
 The file ScholarUtils.py contains a short library of utilities for use with a specific Search Engine Results Page (SERP) API service: serpapi.com. This currently provides a free two-week trial account.
 
 The service requires an API key in the file APIKey.yaml in the same directory as the notebook files. The format of that file is:
+
     # Comments with the hash character
     SERP_API_KEY: 92340184908390218409819aslkjfk13948
 
