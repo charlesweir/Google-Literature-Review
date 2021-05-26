@@ -5,7 +5,7 @@ This project contains Python code in Jupyter Notebooks used to conduct a systema
 We used an iterative process, and this is reflected in the notebooks: 
 
 * FirstStep.ipynb starts from a few 'seed' papers and creates a first spreadsheet for the reviewers to code from. 
-* Snowballing.ipynb takes a coded spreadsheet and generates a list further papers to assess. It is run several times; each time creating a new 'round' of papers.
+* Snowballing.ipynb takes a coded spreadsheet and generates a list of further papers to assess. It is run several times; each time creating a new 'round' of papers.
 * Analysis.ipynb carries out some numeric and graphical analysis on the resulting list of papers. 
 
 The file ScholarUtils.py contains a short library of utilities for use with a specific Search Engine Results Page (SERP) API service: serpapi.com. This currently provides a free two-week trial account.
