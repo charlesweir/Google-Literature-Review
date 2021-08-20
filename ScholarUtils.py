@@ -25,7 +25,7 @@ def GetPapers( searchParams ):
     if (firstPage.get('error')):
         if firstPage['error'] == "Google hasn't returned any results for this query.":
             return []
-        raise Exception(firstPage['error'])
+        raise Exception(firstPage)
     numResults = firstPage['search_information'].get('total_results',
                                  len(firstPage['organic_results'])) # Missing total_results means 1 paper.
     if numResults > 1000: raise Exception('Too many results: {} for {}'.format(numResults, searchParams))
@@ -33,7 +33,10 @@ def GetPapers( searchParams ):
     results=firstPage['organic_results']
     for i in range(10, numResults, 10):
         search.params_dict['start']=i
-        results += search.get_json()['organic_results']
+        searchResult = search.get_json()
+        if searchResult.get('error'):
+            raise Exception(searchResult)
+        results += searchResult['organic_results']
     return results
 
 def GetPaper( searchParams ):
@@ -43,7 +46,6 @@ def GetPaper( searchParams ):
 
     print('GetPaper:{}'.format(searchParams))
     search=GoogleScholarSearch(searchParams.copy()) # Sigh! The class takes ownership of the parameters dict.
-    #search.params_dict['lr']='lang_en' # No! This causes Scholar to miss some papers.
     firstPage=search.get_json()
     if (firstPage.get('error')):
         if firstPage['error'] == "Google hasn't returned any results for this query.":
