@@ -15,44 +15,36 @@ def InitScholar(configFile):
     with open(configFile, 'r') as stream:
         GoogleScholarSearch.SERP_API_KEY=yaml.safe_load(stream)['SERP_API_KEY']
     
-def GetPapers( searchParams ):
+def GetPapers( searchParams, maxPapers=200 ):
     # Answers a list of Google Scholar 'organic_result' structures for papers corresponding to the search params passed.
     # E.g. u=GetPapers({"cites": "7379463099867128855"})
 
     search=GoogleScholarSearch(searchParams.copy()) # Sigh! The class takes ownership of the parameters dict.
     # search.params_dict['lr']='lang_en' # No - Scholar doesn't have the classifications consistent.
-    firstPage=search.get_json()
-    if (firstPage.get('error')):
-        if firstPage['error'] == "Google hasn't returned any results for this query.":
-            return []
-        raise Exception(firstPage)
-    numResults = firstPage['search_information'].get('total_results',
-                                 len(firstPage['organic_results'])) # Missing total_results means 1 paper.
-    if numResults > 1000: raise Exception('Too many results: {} for {}'.format(numResults, searchParams))
-    print('Retrieving {} papers for {}'.format(numResults, searchParams))
-    results=firstPage['organic_results']
-    for i in range(10, numResults, 10):
-        search.params_dict['start']=i
+    # Clumsy loop, because we don't know the loop invariant until after the first request:
+    results=[]
+    while len(results) < maxPapers:
+        search.params_dict['start']=len(results)
         searchResult = search.get_json()
         if searchResult.get('error'):
+            if searchResult['error'] == "Google hasn't returned any results for this query.":
+                print('No papers found for {}'.format(searchParams))
+                break
             raise Exception(searchResult)
         results += searchResult['organic_results']
-    return results
+        # Three cases: limited by passed in maxPapers; limited by Google's 'Total results' for the query, or it's a single page result:
+        maxPapers = min(maxPapers, searchResult['search_information'].get('total_results',len(results)))
+        if search.params_dict['start'] == 0: # First request?
+            print('Retrieving {} papers for {}'.format(maxPapers, searchParams))
+    return results[:maxPapers] # Truncate, else requesting 3 results would return 10.
 
 def GetPaper( searchParams ):
     # Answers the first 'organic_result' paper corresponding to the search params passed.
     # If not found, answers an empty map. Note - might only find the citing paper.
     # E.g. u=GetPaper({"q": "Search string"})
 
-    print('GetPaper:{}'.format(searchParams))
-    search=GoogleScholarSearch(searchParams.copy()) # Sigh! The class takes ownership of the parameters dict.
-    firstPage=search.get_json()
-    if (firstPage.get('error')):
-        if firstPage['error'] == "Google hasn't returned any results for this query.":
-            return {}
-        raise Exception(firstPage['error'])
-    results=firstPage.get('organic_results',[{}])
-    return results[0]
+    results=GetPapers( searchParams, 1 )
+    return results[0] if results else {}
 
 yearRE=re.compile('(?:198|199|200|201|202)\d') # Matches 1980 through 2029
 
