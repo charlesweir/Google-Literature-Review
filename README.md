@@ -1,6 +1,15 @@
 # DCS-Literature-Review
 
-This project contains Python code in Jupyter Notebooks used to conduct a systematic literature review using Google Scholar via a SERP API service. The review is to find a small set of the 'most important' papers in the field, so uses citation counts as a mechanical filter, along with manual double coding by the authors.
+This project contains Python code in Jupyter Notebooks used to conduct a systematic literature review using Google Scholar via a SERP API service. 
+
+It simplifies three aspects of literature reviews:
+* It creates a spreadsheet with papers, snippets and links to the PDFs ready for fast dual coding
+* It remembers which papers have been coded, so avoids repetition.
+* It uses what is probably the most complete research database, and uses 'related articles' links. 
+
+The process supports a snowballing approach, starting from some initial papers and exploring 'related articles'. It can be used in two modes, to:
+* Find a set of papers satisfying some manually selected criteria, with or without double coding by two authors
+* Find a small set of the 'most important' papers satisfying a similar criteria, using citation counts as a mechanical filter, again with or without double coding.
 
 We used an iterative process, and this is reflected in the notebooks: 
 
@@ -8,7 +17,9 @@ We used an iterative process, and this is reflected in the notebooks:
 * Snowballing.ipynb takes a coded spreadsheet and generates a list of further papers to assess. It is run several times; each time creating a new 'round' of papers.
 * Analysis.ipynb carries out some numeric and graphical analysis on the resulting list of papers. 
 
-The file ScholarUtils.py contains a short library of utilities for use with a specific Search Engine Results Page (SERP) API service: serpapi.com. This currently provides a free two-week trial account.
+More instructions are available in the notebooks themselves.
+
+The file ScholarUtils.py contains a short library of utilities for use with a specific Search Engine Results Page (SERP) API service: serpapi.com. While it is quite easy (and now legal) to scrape Google Scholar directly, SerpAPI avoids the throttling limits of a few requests per minute imposed by Google. The service currently provides a limited trial account.
 
 The service requires an API key in the file APIKey.yaml in the same directory as the notebook files. The format of that file is:
 

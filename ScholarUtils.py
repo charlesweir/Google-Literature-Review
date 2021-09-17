@@ -15,8 +15,8 @@ def InitScholar(configFile):
     with open(configFile, 'r') as stream:
         GoogleScholarSearch.SERP_API_KEY=yaml.safe_load(stream)['SERP_API_KEY']
     
-def GetPapers( searchParams, maxPapers=200 ):
-    # Answers a list of Google Scholar 'organic_result' structures for papers corresponding to the search params passed.
+def GetPapers( searchParams, maxPapers=100 ):
+    # Answers a list of (up to maxPapers) Google Scholar 'organic_result' structures for papers corresponding to the search params passed.
     # E.g. u=GetPapers({"cites": "7379463099867128855"})
 
     search=GoogleScholarSearch(searchParams.copy()) # Sigh! The class takes ownership of the parameters dict.
@@ -35,8 +35,8 @@ def GetPapers( searchParams, maxPapers=200 ):
         # Three cases: limited by passed in maxPapers; limited by Google's 'Total results' for the query, or it's a single page result:
         maxPapers = min(maxPapers, searchResult['search_information'].get('total_results',len(results)))
         if search.params_dict['start'] == 0: # First request?
-            print('Retrieving {} papers for {}'.format(maxPapers, searchParams))
-    return results[:maxPapers] # Truncate, else requesting 3 results would return 10.
+            print('Retrieving {} paper{} for {}'.format(maxPapers, 's' if maxPapers>1 else '', searchParams))
+    return results[:maxPapers] # Truncate, else requesting 3 results could return 10.
 
 def GetPaper( searchParams ):
     # Answers the first 'organic_result' paper corresponding to the search params passed.
